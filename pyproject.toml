@@ -1,8 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "pdf-injection-scanner"
 version = "0.1.0"
-description = "Detect hidden prompt injection attacks in PDF files"
+description = "CLI tool to detect hidden prompt injection attacks in PDF files"
+readme = "README.md"
+license = "MIT"
 requires-python = ">=3.10"
+authors = [
+    { name = "Andy", email = "andy8647tian@gmail.com" },
+]
+keywords = ["pdf", "prompt-injection", "llm", "security", "ai-safety"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Utilities",
+]
 dependencies = [
     "pdfplumber>=0.10",
     "click>=8.0",
@@ -10,4 +30,12 @@ dependencies = [
 ]
 
 [project.scripts]
-pdf-scan = "scanner:main"
+pdf-scan = "pdf_injection_scanner.scanner:main"
+
+[project.urls]
+Homepage = "https://github.com/Andy8647/pdf-injection-scanner"
+Repository = "https://github.com/Andy8647/pdf-injection-scanner"
+Issues = "https://github.com/Andy8647/pdf-injection-scanner/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pdf_injection_scanner"]
