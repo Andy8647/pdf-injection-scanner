@@ -16,26 +16,29 @@ Professors and others may embed invisible instructions in PDFs (white text, tiny
 ## Install
 
 ```bash
-# Clone and install
+# pip (recommended)
+pip install pdf-injection-scanner
+
+# Homebrew (macOS)
+brew install Andy8647/tap/pdf-injection-scanner
+
+# From source
 git clone https://github.com/Andy8647/pdf-injection-scanner.git
 cd pdf-injection-scanner
 pip install -e .
-
-# Or just install dependencies
-pip install pdfplumber click rich
 ```
 
 ## Usage
 
 ```bash
 # Basic scan
-python scanner.py assignment.pdf
+pdf-scan assignment.pdf
 
 # Verbose output with details
-python scanner.py assignment.pdf -v
+pdf-scan assignment.pdf -v
 
 # JSON output for piping
-python scanner.py assignment.pdf --json
+pdf-scan assignment.pdf --json
 ```
 
 ### Example output
