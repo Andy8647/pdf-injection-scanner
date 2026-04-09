@@ -16,7 +16,10 @@ Professors and others may embed invisible instructions in PDFs (white text, tiny
 ## Install
 
 ```bash
-# pip (recommended)
+# uv (recommended)
+uv tool install pdf-injection-scanner
+
+# pip
 pip install pdf-injection-scanner
 
 # Homebrew (macOS)

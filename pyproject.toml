@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pdf-injection-scanner"
-version = "0.1.0"
+version = "0.1.1"
 description = "CLI tool to detect hidden prompt injection attacks in PDF files"
 readme = "README.md"
 license = "MIT"

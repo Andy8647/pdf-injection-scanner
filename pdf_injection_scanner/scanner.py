@@ -19,7 +19,7 @@ console = Console()
 
 # Common prompt injection patterns
 INJECTION_PATTERNS = [
-    (r"(?i)if\s+you\s+are\s+(an?\s+)?ai", "AI identity check"),
+    (r"(?i)if\s+you\s+are\s+(an?\s+)?ai\b", "AI identity check"),
     (r"(?i)ignore\s+(all\s+)?previous\s+instructions?", "Instruction override"),
     (r"(?i)you\s+are\s+(a\s+)?(language\s+model|llm|ai\s+assistant|chatbot)", "AI identity assertion"),
     (r"(?i)do\s+not\s+follow\s+(the\s+)?(user|original)", "Instruction hijack"),
@@ -263,7 +263,6 @@ def print_findings(findings, verbose):
     table.add_column("Severity", width=8, justify="center")
     table.add_column("Type", width=22)
     table.add_column("Content", max_width=60)
-    table.add_column("Location", width=14)
 
     findings.sort(key=lambda f: (f.page, SEVERITY_ORDER.get(f.severity, 9)))
 
@@ -276,7 +275,6 @@ def print_findings(findings, verbose):
             f"[{color}]{f.severity.upper()}[/{color}]",
             escape(f.finding_type),
             escape(content_preview),
-            escape(f.location),
         )
 
     console.print(table)
@@ -290,8 +288,6 @@ def print_findings(findings, verbose):
             console.print(f"  Severity: {f.severity}")
             console.print(f"  Description: {escape(f.description)}")
             console.print(f"  Content: {escape(f.content)}")
-            if f.location:
-                console.print(f"  Location: {f.location}")
             console.print()
 
 
@@ -336,7 +332,6 @@ def main(pdf_path: Path, output_json: bool, verbose: bool):
                 "type": f.finding_type,
                 "description": f.description,
                 "content": f.content,
-                "location": f.location,
                 "severity": f.severity,
             }
             for f in all_findings
