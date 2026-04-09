@@ -1,0 +1,13 @@
+[project]
+name = "pdf-injection-scanner"
+version = "0.1.0"
+description = "Detect hidden prompt injection attacks in PDF files"
+requires-python = ">=3.10"
+dependencies = [
+    "pdfplumber>=0.10",
+    "click>=8.0",
+    "rich>=13.0",
+]
+
+[project.scripts]
+pdf-scan = "scanner:main"
