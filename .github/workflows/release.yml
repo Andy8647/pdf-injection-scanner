@@ -42,7 +42,7 @@ jobs:
 
       - name: Update Homebrew formula
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         run: |
           VERSION="${{ steps.version.outputs.VERSION }}"
           TARBALL_URL="https://files.pythonhosted.org/packages/source/p/pdf-injection-scanner/pdf_injection_scanner-${VERSION}.tar.gz"
