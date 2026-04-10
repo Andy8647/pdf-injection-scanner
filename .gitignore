@@ -3,4 +3,5 @@ __pycache__/
 .venv/
 dist/
 *.egg-info/
-test_injected.pdf
+*.pdf
+!*.pdf.example

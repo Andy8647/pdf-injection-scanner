@@ -11,7 +11,7 @@ Professors and others may embed invisible instructions in PDFs (white text, tiny
 | **White/invisible text** | HIGH | Detects characters with white or near-white fill color |
 | **Tiny text** | HIGH | Flags text smaller than 2pt — invisible to the eye |
 | **Off-page text** | HIGH | Finds text positioned outside visible page boundaries |
-| **Suspicious patterns** | MEDIUM | 17+ regex patterns for common prompt injection phrases |
+| **Suspicious patterns** | MEDIUM | 30+ regex patterns for prompt injection phrases (EN + CN) |
 
 ## Install
 

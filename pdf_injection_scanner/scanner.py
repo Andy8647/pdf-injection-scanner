@@ -17,8 +17,8 @@ from rich.table import Table
 
 console = Console()
 
-# Common prompt injection patterns
-INJECTION_PATTERNS = [
+# Common prompt injection patterns — English
+INJECTION_PATTERNS_EN = [
     (r"(?i)if\s+you\s+are\s+(an?\s+)?ai\b", "AI identity check"),
     (r"(?i)ignore\s+(all\s+)?previous\s+instructions?", "Instruction override"),
     (r"(?i)you\s+are\s+(a\s+)?(language\s+model|llm|ai\s+assistant|chatbot)", "AI identity assertion"),
@@ -37,6 +37,26 @@ INJECTION_PATTERNS = [
     (r"(?i)if\s+you\s+are\s+(a\s+)?(gpt|claude|gemini|copilot|llama)", "Model-specific check"),
     (r"(?i)(please\s+)?include\s+(the\s+)?(word|phrase|sentence)\s+.{1,40}\s+in\s+your", "Canary word injection"),
 ]
+
+# Common prompt injection patterns — Chinese
+INJECTION_PATTERNS_CN = [
+    (r"如果你是.{0,4}(AI|人工智能|语言模型|大模型|机器人|助手)", "AI身份检测"),
+    (r"忽略.{0,4}(之前|以上|前面|上面|先前|所有).{0,4}(指令|指示|规则|要求|提示)", "指令覆盖"),
+    (r"(无视|忽视|跳过|丢弃).{0,4}(之前|以上|前面|先前|所有).{0,4}(指令|规则|要求|内容)", "指令覆盖"),
+    (r"(请|你)?在.{0,6}(回答|回复|响应|输出).{0,6}(包含|加上|提到|引用|加入).{0,20}(这个词|一词|这句话)", "暗号词注入"),
+    (r"(请|你)?以.{0,10}(开头|开始|作为开头)", "行为指定"),
+    (r"(请|你)?(假装|假设|扮演|伪装).{0,6}(你是|自己是|成为)", "行为覆盖"),
+    (r"(你现在是|你的角色是|你扮演).{0,10}(不受限|无限制|没有约束)", "角色劫持"),
+    (r"(输出|显示|告诉我|泄露).{0,6}(系统提示|系统指令|system\s*prompt)", "系统提示泄露"),
+    (r"(忘记|抛弃|放弃).{0,4}(之前|以上|所有|一切).{0,4}(规则|指令|设定|限制)", "记忆清除"),
+    (r"(不要|禁止|不准|不许).{0,4}(遵守|遵循|执行).{0,6}(之前|以上|原始|原来)", "指令劫持"),
+    (r"(新的?指令|新的?规则|新的?要求)\s*[:：]", "新指令注入"),
+    (r"(AI|人工智能|大模型|语言模型).{0,4}(注意|请注意|须知)", "AI定向指令"),
+    (r"(从现在开始|即刻起|此刻起).{0,6}(你|忽略|忘记|不再)", "持续覆盖"),
+    (r"(回答|回复).{0,6}(结尾|末尾|最后).{0,6}(加上|添加|写上)", "暗号词注入"),
+]
+
+INJECTION_PATTERNS = INJECTION_PATTERNS_EN + INJECTION_PATTERNS_CN
 
 
 @dataclass
@@ -299,7 +319,7 @@ def main(pdf_path: Path, output_json: bool, verbose: bool):
     """Scan a PDF file for hidden prompt injection attacks.
 
     Detects white/invisible text, tiny text, off-page text,
-    and suspicious prompt injection patterns.
+    and suspicious prompt injection patterns (EN + CN).
     """
     console.print(f"\n[bold]Scanning:[/bold] {pdf_path}\n")
 
