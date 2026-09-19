@@ -101,6 +101,25 @@ def is_same_as_bg(color, bg_color):
     return False
 
 
+def bg_color_at(page, x, y):
+    """Return the fill color of the topmost shape covering point (x, y), or None.
+
+    pdfminer yields objects in content-stream (draw) order, so the last
+    matching filled shape is the one drawn on top.
+    """
+    color = None
+    for shape in list(page.rects) + list(page.curves):
+        if not shape.get("fill"):
+            continue
+        fill = shape.get("non_stroking_color")
+        if fill is None:
+            continue
+        if (shape["x0"] - 1 <= x <= shape["x1"] + 1
+                and shape["top"] - 1 <= y <= shape["bottom"] + 1):
+            color = fill
+    return color
+
+
 def group_chars_into_segments(chars):
     """Group nearby characters into readable text segments."""
     if not chars:
@@ -135,10 +154,26 @@ def segment_location(segment):
     return f"x={c.get('x0', 0):.0f}, y={c.get('top', 0):.0f}"
 
 
-def scan_hidden_text(chars, page_num):
-    """Detect white/invisible text."""
+def scan_hidden_text(chars, page_num, page=None, bg_threshold=0.8):
+    """Detect white/invisible text.
+
+    White text is only invisible when it sits on a white (or absent)
+    background. White text on a dark filled shape — e.g. a black title
+    banner — is a legitimate design choice and must not be flagged.
+    """
     findings = []
-    white_chars = [c for c in chars if is_white_or_near_white(c.get("non_stroking_color"))]
+    white_chars = []
+    for c in chars:
+        if not is_white_or_near_white(c.get("non_stroking_color")):
+            continue
+        if page is not None:
+            cx = (c.get("x0", 0) + c.get("x1", 0)) / 2
+            cy = (c.get("top", 0) + c.get("bottom", 0)) / 2
+            bg = bg_color_at(page, cx, cy)
+            if bg is not None and not is_white_or_near_white(bg, bg_threshold):
+                # Contrasting (dark) background: the text is visible, skip it.
+                continue
+        white_chars.append(c)
 
     for segment in group_chars_into_segments(white_chars):
         text = segment_text(segment)
@@ -231,7 +266,7 @@ def scan_page(page, page_num):
         return findings
 
     # Hidden text detections
-    white_findings, white_ids = scan_hidden_text(chars, page_num)
+    white_findings, white_ids = scan_hidden_text(chars, page_num, page)
     findings.extend(white_findings)
     findings.extend(scan_tiny_text(chars, page_num, white_ids))
     findings.extend(scan_offpage_text(chars, page_num, page.width, page.height))
